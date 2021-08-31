@@ -147,7 +147,7 @@ public class CoffeeMakerTest {
      * Should return false
      */
     @Test
-    public void testMakeCoffeeAddRecipeSameName() {
+    public void testAddRecipeSameName() {
         coffeeMaker.addRecipe(recipe1);
         Recipe tmp_recipe = new Recipe();
         tmp_recipe.setName(recipe1.getName());
