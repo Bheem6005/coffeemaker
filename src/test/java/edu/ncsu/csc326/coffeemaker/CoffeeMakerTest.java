@@ -92,7 +92,7 @@ public class CoffeeMakerTest {
         recipe4.setPrice("65");
     }
 
-    /** Test: Add a Recipe */
+    /** UC2: Add a Recipe */
 
     /**
      * Add a valid recipe to CoffeeMaker with no recipe
@@ -154,7 +154,7 @@ public class CoffeeMakerTest {
         assertFalse(coffeeMaker.addRecipe(tmp_recipe));
     }
 
-    /** Test: Delete a Recipe */
+    /** UC3: Delete a Recipe */
 
     /**
      * Delete a recipe from CoffeeMaker with valid recipe
@@ -195,7 +195,7 @@ public class CoffeeMakerTest {
     }
 
 
-    /** Test: Edit a Recipe */
+    /** UC4: Edit a Recipe */
 
     /**
      * Edit a valid recipe in CoffeeMaker
@@ -240,7 +240,7 @@ public class CoffeeMakerTest {
         assertNull(coffeeMaker.editRecipe(4, recipe1));
     }
 
-    /** Test: Add Inventory */
+    /** UC5: Add Inventory */
 
     /**
      * Given a coffee maker with the default inventory
@@ -359,7 +359,7 @@ public class CoffeeMakerTest {
         coffeeMaker.addInventory("4", "4", "4", "four");
     }
 
-    /** Test: Check Inventory */
+    /** UC6: Check Inventory */
 
     /**
      * Check default inventory
@@ -484,7 +484,7 @@ public class CoffeeMakerTest {
         assertEquals(buf.toString(), coffeeMaker.checkInventory());
     }
 
-    /** Test: Purchase Beverage */
+    /** UC7: Purchase Beverage */
 
     /**
      * Given a coffee maker with one valid recipe
