@@ -44,6 +44,18 @@ public class CoffeeMakerTest {
     private Recipe recipe3;
     private Recipe recipe4;
 
+    private static Recipe createRecipe(String name, String amtChocolate, String amtCoffee, String amtMilk, String amtSugar, String price) throws RecipeException {
+        Recipe recipe = new Recipe();
+        recipe.setName(name);
+        recipe.setAmtChocolate(amtChocolate);
+        recipe.setAmtCoffee(amtCoffee);
+        recipe.setAmtMilk(amtMilk);
+        recipe.setAmtSugar(amtSugar);
+        recipe.setPrice(price);
+
+        return recipe;
+    }
+
     /**
      * Initializes some recipes to test with and the {@link CoffeeMaker}
      * object we wish to test.
@@ -56,40 +68,13 @@ public class CoffeeMakerTest {
         coffeeMaker = new CoffeeMaker();
 
         //Set up for r1
-        recipe1 = new Recipe();
-        recipe1.setName("Coffee");
-        recipe1.setAmtChocolate("0");
-        recipe1.setAmtCoffee("3");
-        recipe1.setAmtMilk("1");
-        recipe1.setAmtSugar("1");
-        recipe1.setPrice("50");
-
+        recipe1 = createRecipe("Coffee","0","3","1","1","50");
         //Set up for r2
-        recipe2 = new Recipe();
-        recipe2.setName("Mocha");
-        recipe2.setAmtChocolate("20");
-        recipe2.setAmtCoffee("3");
-        recipe2.setAmtMilk("1");
-        recipe2.setAmtSugar("1");
-        recipe2.setPrice("75");
-
+        recipe2 = createRecipe("Mocha","20","3","1","1","75");
         //Set up for r3
-        recipe3 = new Recipe();
-        recipe3.setName("Latte");
-        recipe3.setAmtChocolate("0");
-        recipe3.setAmtCoffee("3");
-        recipe3.setAmtMilk("3");
-        recipe3.setAmtSugar("1");
-        recipe3.setPrice("100");
-
+        recipe3 = createRecipe("Latte","0","3","3","1","100");
         //Set up for r4
-        recipe4 = new Recipe();
-        recipe4.setName("Hot Chocolate");
-        recipe4.setAmtChocolate("4");
-        recipe4.setAmtCoffee("0");
-        recipe4.setAmtMilk("1");
-        recipe4.setAmtSugar("1");
-        recipe4.setPrice("65");
+        recipe4 = createRecipe("Hot Chocolate","4","0","1","1","65");
     }
 
     /** UC2: Add a Recipe */
@@ -343,7 +328,7 @@ public class CoffeeMakerTest {
      */
     @Test(expected = InventoryException.class)
     public void testAddInventoryNegativeChocolate() throws InventoryException {
-        coffeeMaker.addInventory("4", "4", "4", "-4");
+        coffeeMaker.addInventory("4", "4", "0", "-4");
     }
 
     /**
@@ -356,7 +341,7 @@ public class CoffeeMakerTest {
      */
     @Test(expected = InventoryException.class)
     public void testAddInventoryNonNumChocolate() throws InventoryException {
-        coffeeMaker.addInventory("4", "4", "4", "four");
+        coffeeMaker.addInventory("4", "4", "0", "four");
     }
 
     /** UC6: Check Inventory */
@@ -558,13 +543,7 @@ public class CoffeeMakerTest {
      */
     @Test
     public void testMakeCoffeeNotEnoughCoffee() throws RecipeException {
-        Recipe tmp_recipe = new Recipe();
-        tmp_recipe.setName("Temp");
-        tmp_recipe.setAmtCoffee("44");
-        tmp_recipe.setAmtMilk("4");
-        tmp_recipe.setAmtSugar("4");
-        tmp_recipe.setAmtChocolate("4");
-        tmp_recipe.setPrice("50");
+        Recipe tmp_recipe = createRecipe("Temp","4","44","4","4","50");
         coffeeMaker.addRecipe(tmp_recipe);
         assertEquals(444, coffeeMaker.makeCoffee(0, 444));
     }
@@ -577,13 +556,7 @@ public class CoffeeMakerTest {
      */
     @Test
     public void testMakeCoffeeNotEnoughMilk() throws RecipeException {
-        Recipe tmp_recipe = new Recipe();
-        tmp_recipe.setName("Temp");
-        tmp_recipe.setAmtCoffee("4");
-        tmp_recipe.setAmtMilk("44");
-        tmp_recipe.setAmtSugar("4");
-        tmp_recipe.setAmtChocolate("4");
-        tmp_recipe.setPrice("50");
+        Recipe tmp_recipe = createRecipe("Temp","4","4","44","4","50");
         coffeeMaker.addRecipe(tmp_recipe);
         assertEquals(444, coffeeMaker.makeCoffee(0, 444));
     }
@@ -596,13 +569,7 @@ public class CoffeeMakerTest {
      */
     @Test
     public void testMakeCoffeeNotEnoughSugar() throws RecipeException {
-        Recipe tmp_recipe = new Recipe();
-        tmp_recipe.setName("Temp");
-        tmp_recipe.setAmtCoffee("4");
-        tmp_recipe.setAmtMilk("4");
-        tmp_recipe.setAmtSugar("44");
-        tmp_recipe.setAmtChocolate("4");
-        tmp_recipe.setPrice("50");
+        Recipe tmp_recipe = createRecipe("Temp","4","4","4","44","50");
         coffeeMaker.addRecipe(tmp_recipe);
         assertEquals(444, coffeeMaker.makeCoffee(0, 444));
     }
@@ -615,13 +582,7 @@ public class CoffeeMakerTest {
      */
     @Test
     public void testMakeCoffeeNotEnoughChocolate() throws RecipeException {
-        Recipe tmp_recipe = new Recipe();
-        tmp_recipe.setName("Temp");
-        tmp_recipe.setAmtCoffee("4");
-        tmp_recipe.setAmtMilk("4");
-        tmp_recipe.setAmtSugar("4");
-        tmp_recipe.setAmtChocolate("44");
-        tmp_recipe.setPrice("50");
+        Recipe tmp_recipe = createRecipe("Temp","44","4","4","4","50");
         coffeeMaker.addRecipe(tmp_recipe);
         assertEquals(444, coffeeMaker.makeCoffee(0, 444));
     }
