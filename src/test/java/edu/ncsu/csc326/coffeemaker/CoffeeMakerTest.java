@@ -25,6 +25,7 @@ import edu.ncsu.csc326.coffeemaker.exceptions.InventoryException;
 import edu.ncsu.csc326.coffeemaker.exceptions.RecipeException;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 /**
  * Unit tests for CoffeeMaker class.
@@ -37,12 +38,15 @@ public class CoffeeMakerTest {
      * The object under test.
      */
     private CoffeeMaker coffeeMaker;
+    private CoffeeMaker coffeeMakerStub;
+    private RecipeBook recipeBookStub;
 
     // Sample recipes to use in testing.
     private Recipe recipe1;
     private Recipe recipe2;
     private Recipe recipe3;
     private Recipe recipe4;
+    private Recipe[] recipes;
 
     private static Recipe createRecipe(String name, String amtChocolate, String amtCoffee, String amtMilk, String amtSugar, String price) throws RecipeException {
         Recipe recipe = new Recipe();
@@ -75,6 +79,9 @@ public class CoffeeMakerTest {
         recipe3 = createRecipe("Latte","0","3","3","1","100");
         //Set up for r4
         recipe4 = createRecipe("Hot Chocolate","4","0","1","1","65");
+
+        recipeBookStub = mock(RecipeBook.class);
+        coffeeMakerStub = new CoffeeMaker(recipeBookStub, new Inventory());
     }
 
     /** UC2: Add a Recipe */
@@ -479,8 +486,11 @@ public class CoffeeMakerTest {
      */
     @Test
     public void testMakeCoffee() {
-        coffeeMaker.addRecipe(recipe1);
-        assertEquals(25, coffeeMaker.makeCoffee(0, recipe1.getPrice() + 25));
+        recipes = new Recipe[] {recipe1};
+        when(recipeBookStub.getRecipes()).thenReturn(recipes);
+        assertEquals(25, coffeeMakerStub.makeCoffee(0, 75));
+
+        verify(recipeBookStub, times(4)).getRecipes();
     }
 
     /**
@@ -491,9 +501,11 @@ public class CoffeeMakerTest {
      */
     @Test
     public void testMakeCoffee1() {
-        coffeeMaker.addRecipe(recipe1);
-        coffeeMaker.addRecipe(recipe3);
-        assertEquals(25, coffeeMaker.makeCoffee(1, recipe3.getPrice() + 25));
+        recipes = new Recipe[] {recipe1, recipe3};
+        when(recipeBookStub.getRecipes()).thenReturn(recipes);
+        assertEquals(25, coffeeMakerStub.makeCoffee(1, 125));
+
+        verify(recipeBookStub, times(4)).getRecipes();
     }
 
     /**
@@ -504,10 +516,11 @@ public class CoffeeMakerTest {
      */
     @Test
     public void testMakeCoffee2() {
-        coffeeMaker.addRecipe(recipe1);
-        coffeeMaker.addRecipe(recipe2);
-        coffeeMaker.addRecipe(recipe3);
-        assertEquals(25, coffeeMaker.makeCoffee(2, recipe3.getPrice() + 25));
+        recipes = new Recipe[] {recipe1,recipe2,recipe3};
+        when(recipeBookStub.getRecipes()).thenReturn(recipes);
+        assertEquals(25, coffeeMakerStub.makeCoffee(2, 125));
+
+        verify(recipeBookStub, times(4)).getRecipes();
     }
 
     /**
@@ -518,9 +531,11 @@ public class CoffeeMakerTest {
      */
     @Test
     public void testMakeCoffeePaidLessThanCost() {
-        coffeeMaker.addRecipe(recipe1);
-        assertEquals(recipe1.getPrice() - 1, coffeeMaker.makeCoffee(0,
-                recipe1.getPrice() - 1));
+        recipes = new Recipe[] {recipe1};
+        when(recipeBookStub.getRecipes()).thenReturn(recipes);
+        assertEquals(49, coffeeMakerStub.makeCoffee(0, 49));
+
+        verify(recipeBookStub, times(2)).getRecipes();
     }
 
     /**
@@ -531,8 +546,11 @@ public class CoffeeMakerTest {
      */
     @Test
     public void testMakeCoffeePaidExactCost() {
-        coffeeMaker.addRecipe(recipe1);
-        assertEquals(0, coffeeMaker.makeCoffee(0, recipe1.getPrice()));
+        recipes = new Recipe[] {recipe1};
+        when(recipeBookStub.getRecipes()).thenReturn(recipes);
+        assertEquals(0, coffeeMakerStub.makeCoffee(0, 50));
+
+        verify(recipeBookStub, times(4)).getRecipes();
     }
 
     /**
@@ -544,8 +562,11 @@ public class CoffeeMakerTest {
     @Test
     public void testMakeCoffeeNotEnoughCoffee() throws RecipeException {
         Recipe tmp_recipe = createRecipe("Temp","4","44","4","4","50");
-        coffeeMaker.addRecipe(tmp_recipe);
-        assertEquals(444, coffeeMaker.makeCoffee(0, 444));
+        recipes = new Recipe[] {tmp_recipe};
+        when(recipeBookStub.getRecipes()).thenReturn(recipes);
+        assertEquals(444, coffeeMakerStub.makeCoffee(0, 444));
+
+        verify(recipeBookStub, times(3)).getRecipes();
     }
 
     /**
@@ -557,8 +578,11 @@ public class CoffeeMakerTest {
     @Test
     public void testMakeCoffeeNotEnoughMilk() throws RecipeException {
         Recipe tmp_recipe = createRecipe("Temp","4","4","44","4","50");
-        coffeeMaker.addRecipe(tmp_recipe);
-        assertEquals(444, coffeeMaker.makeCoffee(0, 444));
+        recipes = new Recipe[] {tmp_recipe};
+        when(recipeBookStub.getRecipes()).thenReturn(recipes);
+        assertEquals(444, coffeeMakerStub.makeCoffee(0, 444));
+
+        verify(recipeBookStub, times(3)).getRecipes();
     }
 
     /**
@@ -570,8 +594,11 @@ public class CoffeeMakerTest {
     @Test
     public void testMakeCoffeeNotEnoughSugar() throws RecipeException {
         Recipe tmp_recipe = createRecipe("Temp","4","4","4","44","50");
-        coffeeMaker.addRecipe(tmp_recipe);
-        assertEquals(444, coffeeMaker.makeCoffee(0, 444));
+        recipes = new Recipe[] {tmp_recipe};
+        when(recipeBookStub.getRecipes()).thenReturn(recipes);
+        assertEquals(444, coffeeMakerStub.makeCoffee(0, 444));
+
+        verify(recipeBookStub, times(3)).getRecipes();
     }
 
     /**
@@ -583,8 +610,11 @@ public class CoffeeMakerTest {
     @Test
     public void testMakeCoffeeNotEnoughChocolate() throws RecipeException {
         Recipe tmp_recipe = createRecipe("Temp","44","4","4","4","50");
-        coffeeMaker.addRecipe(tmp_recipe);
-        assertEquals(444, coffeeMaker.makeCoffee(0, 444));
+        recipes = new Recipe[] {tmp_recipe};
+        when(recipeBookStub.getRecipes()).thenReturn(recipes);
+        assertEquals(444, coffeeMakerStub.makeCoffee(0, 444));
+
+        verify(recipeBookStub, times(3)).getRecipes();
     }
 
     /**
@@ -594,7 +624,11 @@ public class CoffeeMakerTest {
      */
     @Test
     public void testMakeCoffeeNoRecipe() {
-        assertEquals(444, coffeeMaker.makeCoffee(0, 444));
+        recipes = new Recipe[4];
+        when(recipeBookStub.getRecipes()).thenReturn(recipes);
+        assertEquals(444, coffeeMakerStub.makeCoffee(0, 444));
+
+        verify(recipeBookStub, times(1)).getRecipes();
     }
 
     /**
@@ -604,8 +638,11 @@ public class CoffeeMakerTest {
      */
     @Test
     public void testMakeCoffeeNegativeIndexRecipe() {
-        coffeeMaker.addRecipe(recipe1);
-        assertEquals(444, coffeeMaker.makeCoffee(-1, 444));
+        recipes = new Recipe[] {recipe1};
+        when(recipeBookStub.getRecipes()).thenReturn(recipes);
+        assertEquals(444, coffeeMakerStub.makeCoffee(-1, 444));
+
+        verify(recipeBookStub, times(1)).getRecipes();
     }
 
     /**
@@ -615,7 +652,10 @@ public class CoffeeMakerTest {
      */
     @Test
     public void testMakeCoffeeOutOfBoundIndexRecipe() {
-        coffeeMaker.addRecipe(recipe1);
-        assertEquals(444, coffeeMaker.makeCoffee(44, 444));
+        recipes = new Recipe[] {recipe1};
+        when(recipeBookStub.getRecipes()).thenReturn(recipes);
+        assertEquals(444, coffeeMakerStub.makeCoffee(44, 444));
+
+        verify(recipeBookStub, times(1)).getRecipes();
     }
 }
